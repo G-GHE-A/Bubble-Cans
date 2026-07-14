@@ -46,7 +46,12 @@ public class ManagerLocalizare : MonoBehaviour
         if (indexLimba == 1) return "WELL DONE!";
         return "PERFECT!";
     }
-
+    public string ObtineTextUrmatorulNivel()
+    {
+        if (indexLimba == 0) return "URMĂTORUL NIVEL";
+        if (indexLimba == 1) return "NEXT LEVEL";
+        return "URMĂTORUL NIVEL";
+    }
     public string ObtineTextIndiciuTradus(int numarCorecte, int numarTotal)
     {
         if (indexLimba == 0) return "Doze corecte: " + numarCorecte + " / " + numarTotal;

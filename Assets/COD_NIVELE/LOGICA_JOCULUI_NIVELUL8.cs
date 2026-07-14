@@ -17,6 +17,7 @@ public class LOGICA_JOCULUI_NIVELUL8 : MonoBehaviour
     public Button doza10;
 
     public TextMeshProUGUI textIndiciu;
+    public TextMeshProUGUI textCastig;
     public GameObject panouVictorie;
 
     private int pozitie_corecta1;
@@ -138,7 +139,7 @@ public class LOGICA_JOCULUI_NIVELUL8 : MonoBehaviour
             if (VerificaVictorie() == true)
             {
                 panouVictorie.SetActive(true);
-                textIndiciu.text = "PERFECT!";
+                textCastig.text = ManagerLocalizare.instanta.ObtineTextVictorie();
             }
         }
     }

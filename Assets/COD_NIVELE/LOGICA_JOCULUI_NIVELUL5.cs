@@ -14,6 +14,8 @@ public class LOGICA_JOCULUI_NIVELUL5 : MonoBehaviour
     public Button doza7;
 
     public TextMeshProUGUI textIndiciu;
+    public TextMeshProUGUI textCastig;
+    public TextMeshProUGUI textUrmatorulNivel;
     public GameObject panouVictorie;
 
     private int pozitie_corecta1;
@@ -114,7 +116,8 @@ public class LOGICA_JOCULUI_NIVELUL5 : MonoBehaviour
             if (VerificaVictorie() == true)
             {
                 panouVictorie.SetActive(true);
-                textIndiciu.text = "PERFECT!";
+                textCastig.text = ManagerLocalizare.instanta.ObtineTextVictorie();
+                textUrmatorulNivel.text = ManagerLocalizare.instanta.ObtineTextUrmatorulNivel();
             }
         }
     }

@@ -94,12 +94,13 @@ public class LOGICA_JOCULUI_NIVELUL1 : MonoBehaviour
     public void ActualizeazaIndiciu()
     {
         int numarCorecte = 0;
+        int numarTotal = 3;
 
         if (doza1.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta1)) numarCorecte++;
         if (doza2.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta2)) numarCorecte++;
         if (doza3.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta3)) numarCorecte++;
 
-        textIndiciu.text = "Doze corecte: " + numarCorecte + " / 3";
+        textIndiciu.text = ManagerLocalizare.instanta.ObtineTextIndiciuTradus(numarCorecte, numarTotal);
     }
 
     bool VerificaVictorie()

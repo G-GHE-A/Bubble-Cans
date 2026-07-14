@@ -107,6 +107,7 @@ public class LOGICA_JOCULUI_NIVELUL3 : MonoBehaviour
     void ActualizeazaIndiciu()
     {
         int numarCorecte = 0;
+        int numarTotal = 5;
 
         if (doza1.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta1)) numarCorecte++;
         if (doza2.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta2)) numarCorecte++;
@@ -114,7 +115,7 @@ public class LOGICA_JOCULUI_NIVELUL3 : MonoBehaviour
         if (doza4.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta4)) numarCorecte++;
         if (doza5.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta5)) numarCorecte++;
 
-        textIndiciu.text = "Doze corecte: " + numarCorecte + " / 5";
+        textIndiciu.text = ManagerLocalizare.instanta.ObtineTextIndiciuTradus(numarCorecte, numarTotal);
     }
 
     bool VerificaVictorie()

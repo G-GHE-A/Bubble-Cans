@@ -5,11 +5,18 @@ using TMPro;
 
 public class LOGICA_JOCULUI_NIVELUL2 : MonoBehaviour
 {
-    public Button doza1;
-    public Button doza2;
-    public Button doza3;
-    public Button doza4;
+    [Header("Generare Dinamică")]
+    [SerializeField] private GameObject[] dozePrefabs; // Pune aici valoarea 4 și trage Prefab-urile
+    [SerializeField] private Transform containerDoze;  // Trage aici obiectul părinte
 
+    [Header("Coordonate UI (Ajustează din Inspector)")]
+    [SerializeField] private float xSlot1 = -300f;
+    [SerializeField] private float xSlot2 = -100f;
+    [SerializeField] private float xSlot3 = 100f;
+    [SerializeField] private float xSlot4 = 300f;
+    [SerializeField] private float pozitieY = -150f;   // Coordonata Y
+
+    [Header("Elemente UI Externe")]
     public TextMeshProUGUI textIndiciu;
     public TextMeshProUGUI textCastig;
     public TextMeshProUGUI textUrmatorulNivel;
@@ -21,24 +28,36 @@ public class LOGICA_JOCULUI_NIVELUL2 : MonoBehaviour
     private int pozitie_corecta4;
 
     private Button primaDozaSelectata = null;
-    private float xSlot1, xSlot2, xSlot3, xSlot4;
+    private List<Button> dozeInstantiate = new List<Button>(); // Lista dozelor generate
 
     void Start()
     {
         SeteazaPozitiiRandom();
-
-        xSlot1 = doza1.GetComponent<RectTransform>().anchoredPosition.x;
-        xSlot2 = doza2.GetComponent<RectTransform>().anchoredPosition.x;
-        xSlot3 = doza3.GetComponent<RectTransform>().anchoredPosition.x;
-        xSlot4 = doza4.GetComponent<RectTransform>().anchoredPosition.x;
-
-        doza1.onClick.AddListener(() => DozaClick(doza1));
-        doza2.onClick.AddListener(() => DozaClick(doza2));
-        doza3.onClick.AddListener(() => DozaClick(doza3));
-        doza4.onClick.AddListener(() => DozaClick(doza4));
+        GenereazaDoze();
 
         panouVictorie.SetActive(false);
         ActualizeazaIndiciu();
+    }
+
+    void GenereazaDoze()
+    {
+        float[] pozitiiX = { xSlot1, xSlot2, xSlot3, xSlot4 };
+
+        for (int i = 0; i < dozePrefabs.Length; i++)
+        {
+            GameObject dozaNoua = Instantiate(dozePrefabs[i], containerDoze);
+
+            // Forțează scara la 1 pentru interfață
+            dozaNoua.transform.localScale = Vector3.one;
+
+            RectTransform rt = dozaNoua.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(pozitiiX[i], pozitieY);
+
+            Button butonDoza = dozaNoua.GetComponent<Button>();
+            butonDoza.onClick.AddListener(() => DozaClick(butonDoza));
+
+            dozeInstantiate.Add(butonDoza);
+        }
     }
 
     void SeteazaPozitiiRandom()
@@ -60,7 +79,8 @@ public class LOGICA_JOCULUI_NIVELUL2 : MonoBehaviour
             numereDisponibile.RemoveAt(index);
 
             pozitie_corecta4 = numereDisponibile[0];
-        } while (pozitie_corecta1 == 1 || pozitie_corecta2 == 2 || pozitie_corecta3 == 3 || pozitie_corecta4 == 4);
+        }
+        while (pozitie_corecta1 == 1 || pozitie_corecta2 == 2 || pozitie_corecta3 == 3 || pozitie_corecta4 == 4);
     }
 
     void DozaClick(Button dozaApasata)
@@ -95,29 +115,39 @@ public class LOGICA_JOCULUI_NIVELUL2 : MonoBehaviour
                 panouVictorie.SetActive(true);
                 textCastig.text = ManagerLocalizare.instanta.ObtineTextVictorie();
                 textUrmatorulNivel.text = ManagerLocalizare.instanta.ObtineTextUrmatorulNivel();
+
+                // Ascunde toate dozele după victorie
+                foreach (Button doza in dozeInstantiate)
+                {
+                    doza.gameObject.SetActive(false);
+                }
             }
         }
     }
 
     void ActualizeazaIndiciu()
     {
+        if (dozeInstantiate.Count < 4) return;
+
         int numarCorecte = 0;
         int numarTotal = 4;
 
-        if (doza1.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta1)) numarCorecte++;
-        if (doza2.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta2)) numarCorecte++;
-        if (doza3.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta3)) numarCorecte++;
-        if (doza4.GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta4)) numarCorecte++;
+        if (dozeInstantiate[0].GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta1)) numarCorecte++;
+        if (dozeInstantiate[1].GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta2)) numarCorecte++;
+        if (dozeInstantiate[2].GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta3)) numarCorecte++;
+        if (dozeInstantiate[3].GetComponent<RectTransform>().anchoredPosition.x == ObtineCoordonataXSlot(pozitie_corecta4)) numarCorecte++;
 
         textIndiciu.text = ManagerLocalizare.instanta.ObtineTextIndiciuTradus(numarCorecte, numarTotal);
     }
 
     bool VerificaVictorie()
     {
-        if (doza1.GetComponent<RectTransform>().anchoredPosition.x != ObtineCoordonataXSlot(pozitie_corecta1)) return false;
-        if (doza2.GetComponent<RectTransform>().anchoredPosition.x != ObtineCoordonataXSlot(pozitie_corecta2)) return false;
-        if (doza3.GetComponent<RectTransform>().anchoredPosition.x != ObtineCoordonataXSlot(pozitie_corecta3)) return false;
-        if (doza4.GetComponent<RectTransform>().anchoredPosition.x != ObtineCoordonataXSlot(pozitie_corecta4)) return false;
+        if (dozeInstantiate.Count < 4) return false;
+
+        if (dozeInstantiate[0].GetComponent<RectTransform>().anchoredPosition.x != ObtineCoordonataXSlot(pozitie_corecta1)) return false;
+        if (dozeInstantiate[1].GetComponent<RectTransform>().anchoredPosition.x != ObtineCoordonataXSlot(pozitie_corecta2)) return false;
+        if (dozeInstantiate[2].GetComponent<RectTransform>().anchoredPosition.x != ObtineCoordonataXSlot(pozitie_corecta3)) return false;
+        if (dozeInstantiate[3].GetComponent<RectTransform>().anchoredPosition.x != ObtineCoordonataXSlot(pozitie_corecta4)) return false;
 
         return true;
     }
